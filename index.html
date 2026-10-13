@@ -154,8 +154,27 @@
 
   footer{padding:26px var(--gutter);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
          font-size:12px;background:var(--ink);color:var(--dim);border-top:1px solid #1d1c1c}
-  .view[data-view="home"]~footer{display:none}
-  body[data-view="home"] footer{display:none}
+
+
+  /* блоки под первым экраном на главной */
+  .panels{display:grid;grid-template-columns:1fr 1fr}
+  .panel{position:relative;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;gap:14px;
+         min-height:min(78svh,620px);padding:var(--gutter);overflow:hidden;isolation:isolate}
+  .panel::before{content:"";position:absolute;inset:0;z-index:-1;opacity:.5;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.02 .09' numOctaves='5'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+  .panel.a{background:#161514;color:var(--paper)}
+  .panel.b{background:var(--stone);color:var(--ink)}
+  .panel.a::before{mix-blend-mode:screen;opacity:.12}
+  .panel h2{font-family:var(--display);font-weight:300;text-transform:uppercase;letter-spacing:.06em;line-height:1;font-size:clamp(30px,5vw,72px)}
+  .panel p{max-width:30ch;opacity:.8}
+  .panel .btn{margin-top:6px}
+  .panel.b .btn::before{background:var(--ink)}
+  .panel.b .btn:hover{color:var(--paper)}
+  .strip{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:var(--ink);color:var(--paper);
+         padding:clamp(32px,5vw,64px) var(--gutter);border-top:1px solid #1d1c1c}
+  .strip a{font-family:var(--display);font-weight:300;font-size:clamp(24px,4vw,56px);letter-spacing:.02em}
+  .strip a:hover{opacity:.7}
+  @media (max-width:700px){.panels{grid-template-columns:1fr}}
 
   .js .reveal{opacity:0;transform:translateY(28px);transition:opacity 1s ease,transform 1s ease}
   .js .reveal.in{opacity:1;transform:none}
@@ -207,7 +226,8 @@
 
 <main>
   <!-- ГЛАВНАЯ: один экран -->
-  <section class="view active hero" data-view="home" aria-label="AREVIK">
+  <div class="view active" data-view="home">
+  <section class="hero" aria-label="AREVIK">
     <div class="hero-fallback"></div>
     <canvas id="gl" aria-hidden="true"></canvas>
     <div class="center">
@@ -223,6 +243,27 @@
       <a class="door right" href="#concept" data-glow="2"><small class="caps">Концепт-стор</small><strong><i>←</i> AREVIK CONCEPT</strong></a>
     </div>
   </section>
+
+  <section class="panels">
+    <a class="panel a" href="#hamar">
+      <span class="caps">Бренд</span>
+      <h2>AREVIK HAMAR</h2>
+      <p>Коллекция авангардной одежды. Заказ через WhatsApp.</p>
+      <span class="btn caps">Открыть</span>
+    </a>
+    <a class="panel b" href="#concept">
+      <span class="caps">Концепт-стор</span>
+      <h2>AREVIK CONCEPT</h2>
+      <p>Пространство, где одежда показана как объект.</p>
+      <span class="btn caps">Открыть</span>
+    </a>
+  </section>
+
+  <section class="strip">
+    <span class="caps">Написать в WhatsApp</span>
+    <a href="https://wa.me/77057385559" target="_blank" rel="noopener">+7 705 738 5559</a>
+  </section>
+  </div>
 
   <!-- AREVIK HAMAR -->
   <section class="view inner light" data-view="hamar">
@@ -423,13 +464,15 @@
     };
     resize(); addEventListener('resize', resize);
 
+    let heroVisible = true;
+    new IntersectionObserver(es => { heroVisible = es[0].isIntersecting; }, { threshold: 0 }).observe(hero);
     let mx = 0, my = 0, tx = 0, ty = 0, hv = 0, boost = 0; const t0 = performance.now();
     addEventListener('pointermove', e => { tx = e.clientX / innerWidth * 2 - 1; ty = e.clientY / innerHeight * 2 - 1; });
     addEventListener('viewchange', () => { resize(); boost = 1; });
 
     const frame = now => {
       requestAnimationFrame(frame);
-      if (document.body.dataset.view !== 'home') return;
+      if (document.body.dataset.view !== 'home' || !heroVisible) return;
       const t = (now - t0) / 1000;
       mx += (tx - mx) * .05; my += (ty - my) * .05;
       hv += (glHover - hv) * .06; boost *= .94;
