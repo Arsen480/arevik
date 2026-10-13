@@ -141,11 +141,15 @@
   .step h4{font-family:var(--display);font-weight:400;font-size:19px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
   .step p{color:var(--mute);max-width:32ch}
 
-  .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:clamp(24px,4vw,56px);margin-top:clamp(40px,6vw,80px);padding-bottom:clamp(70px,10vw,140px)}
+  .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:clamp(24px,4vw,56px);margin-top:clamp(40px,6vw,80px);padding-bottom:clamp(60px,8vw,110px)}
   .fact{border-top:1px solid #3a3938;padding-top:16px}
   .fact small{display:block;color:var(--dim);margin-bottom:6px}
   .fact p{font-family:var(--display);font-size:clamp(18px,2vw,26px);letter-spacing:.06em}
 
+  .fact p{line-height:1.5}
+  .visit{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid #3a3938;
+         padding:28px 0 clamp(70px,10vw,140px);margin-top:-40px}
+  .visit .caps{font-size:clamp(13px,1.6vw,18px)}
   .phone{display:block;font-family:var(--display);font-weight:300;font-size:clamp(34px,9vw,150px);line-height:1;letter-spacing:.01em;
          margin-bottom:clamp(28px,5vw,56px);overflow-wrap:anywhere}
   .phone:hover{opacity:.7}
@@ -260,9 +264,13 @@
     <p class="statement reveal">Пространство, где одежда показана как объект. Свет, камень, тишина.</p>
     <div class="tilt reveal"><div class="ph wide"><span class="caps">Фото пространства скоро</span></div></div>
     <div class="facts">
-      <div class="fact reveal"><small class="caps">Адрес</small><p>Уточняется</p></div>
-      <div class="fact reveal"><small class="caps">Часы работы</small><p>Уточняются</p></div>
+      <div class="fact reveal"><small class="caps">Адрес</small><p>Улица Сауран, 9Б<br>Z05K6K4 Астана, Есиль район<br>Офис 28, 1 этаж</p></div>
+      <div class="fact reveal"><small class="caps">Часы работы</small><p>Пн–Пт: 09:00–19:00<br>Сб: 11:00–19:00<br>Вс: выходной</p></div>
       <div class="fact reveal"><small class="caps">Связаться</small><p>+7 705 738 5559</p></div>
+    </div>
+    <div class="visit reveal">
+      <p class="caps">По предварительной записи</p>
+      <a class="btn caps" href="https://wa.me/77057385559?text=Здравствуйте!%20Хочу%20записаться%20в%20AREVIK%20CONCEPT" target="_blank" rel="noopener">Записаться в WhatsApp</a>
     </div>
   </section>
 
