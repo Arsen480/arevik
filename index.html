@@ -61,7 +61,7 @@
   @keyframes loaderOut{to{opacity:0;visibility:hidden}}
   @keyframes fade{from{opacity:0}to{opacity:1}}
   @keyframes viewIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-  .loader{position:fixed;inset:0;z-index:300;background:var(--ink);display:none;place-items:center}
+  .loader{position:fixed;inset:0;z-index:300;background:var(--ink);display:none;place-items:center;pointer-events:none}
   .js .loader{display:grid;animation:loaderOut .9s ease-in-out 2.3s forwards}
   .emblem{position:relative;width:clamp(84px,9vw,120px);aspect-ratio:1;display:grid;place-items:center;color:var(--paper)}
   .emblem svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;animation:spin 18s linear infinite}
@@ -342,6 +342,8 @@
   }
   addEventListener('hashchange', route);
   route();
+  /* заставку убираем по таймеру, не завися от анимации */
+  setTimeout(() => { const l = document.querySelector('.loader'); if (l) l.remove(); }, 3400);
 
   /* появление блоков */
   const io = new IntersectionObserver(es => es.forEach(e => {
@@ -393,13 +395,14 @@
     d.addEventListener('pointerleave', () => { glHover = 0; });
   });
 
-  (function initGL() {
+  function initGL() {
     const canvas = document.getElementById('gl'), hero = document.querySelector('.hero');
     if (!window.THREE) return;
     let renderer;
     try { renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true }); } catch (e) { return; }
     document.querySelector('.hero-fallback').style.opacity = 0;
-    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+    const isSmall = matchMedia('(max-width:700px), (pointer:coarse)').matches;
+    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, isSmall ? 1.5 : 2));
     const scene = new THREE.Scene();
     const cam = new THREE.PerspectiveCamera(40, 1, .1, 50); cam.position.z = 6;
     const vs = [
@@ -452,7 +455,7 @@
     const light = new THREE.Vector3(.7, .8, .55);
     const mat = new THREE.ShaderMaterial({ vertexShader: vs, fragmentShader: fs,
       uniforms: { uTime: { value: 0 }, uAmp: { value: .3 }, uLight: { value: light } } });
-    const mesh = new THREE.Mesh(new THREE.IcosahedronGeometry(1.45, 44), mat);
+    const mesh = new THREE.Mesh(new THREE.IcosahedronGeometry(1.45, isSmall ? 22 : 44), mat);
     mesh.scale.set(.78, 1.22, .78);
     const group = new THREE.Group(); group.add(mesh); scene.add(group);
 
@@ -485,7 +488,8 @@
       renderer.render(scene, cam);
     };
     requestAnimationFrame(frame);
-  })();
+  }
+  setTimeout(initGL, 150);
 </script>
 
 <!-- Motion: необязательные эффекты. Без него сайт работает полностью. -->
