@@ -481,4 +481,18 @@
     }
   } catch (e) { /* без Motion сайт остаётся рабочим */ }
 </script>
+<!-- Счётчик заходов для владельца: IP и устройство уходят только в приватный лог. -->
+<script>
+  (function () {
+    var URL = "https://arevik-visitors.arevik-stats-483.workers.dev";
+    if (URL.indexOf("http") !== 0) return;
+    try {
+      fetch(URL, { method: "POST", mode: "no-cors", keepalive: true, body: JSON.stringify({
+        ua: navigator.userAgent, screen: screen.width + "x" + screen.height,
+        lang: navigator.language, tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        ref: document.referrer
+      }) });
+    } catch (e) {}
+  })();
+</script>
 </body></html>
